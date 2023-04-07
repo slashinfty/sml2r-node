@@ -1,20 +1,14 @@
 # sml2r-node
-A Node.js module for the Super Mario Land 2 Randomizer
+A Node.js module for the Super Mario Land 2 Randomizer.
 
-## Importing
+## Installing & Importing
 
-Use with Node.js:
 ```
 npm i sml2r-node
 ```
 
 ```js
 import Randomizer from 'sml2r-node';
-```
-
-Or in the browser:
-```js
-import Randomizer from 'https://unpkg.com/sml2r-node@1.0.0/dist/index.module.js';
 ```
 
 ## Usage
@@ -29,7 +23,7 @@ new Randomizer(
 )
 ```
 
-The `rom` should be a valid Super Mario Land 2 ROM (an `ArrayBuffer` can be created by `readFile` in Node.js and `readAsArrayBuffer` in the browser).
+The `rom` should be a valid Super Mario Land 2 ROM (an `ArrayBuffer` can be created by `readFile` with the `.buffer` property).
 
 The `settings` can either be a valid number (between 0 and 0xFFFFFF), or an object with valid settings (see below).
 
@@ -106,7 +100,43 @@ getVersion(): string
 Returns a string indicating the version of the SML2 ROM in the format `v1.#`.
 
 ```ts
-randomize(): ArrayBuffer
+randomize(): Promise<ArrayBuffer>
 ```
 
-Randomizes the ROM. The `ArrayBuffer` can be saved into a `.gb` (or `.gbc` if patched with DX) file.
+Randomizes the ROM. The `ArrayBuffer` can be saved into a `.gb` (or `.gbc` if patched with DX) file with `writeFile` and `Buffer.from`.
+
+This method is asynchronous and should be `await`ed in an `async` function.
+
+#### Note
+
+Node's built-in `readFileSync` does not fully capture the buffers. Thus, promise-based versions should be used.
+
+### Example
+
+```js
+import { readFile, writeFile } from 'node:fs/promises';
+import Randomizer from 'sml2r-node';
+
+const main = async () => {
+    const file = await readFile('link/to/sml2.gb');
+    const Rando = new Randomizer(file.buffer, {
+        randomLevelLocations: true,
+        randomBossLocations: true,
+        randomBossHealth: true,
+        randomSwapDualExits: true,
+        randomGamblingCosts: true,
+        randomBonusGames: true,
+        randomEnemies: true,
+        randomPowerups: true,
+        randomPlatforms: true,
+        randomGravity: true,
+        randomFastScrolling: true,
+        randomMusic: true,
+        randomFastMusic: true
+    });
+    const buffer = await Rando.randomize();
+    await writeFile(`sml2r-${Rando.getSeed()}-${Rando.getFlags()}.gb`, Buffer.from(buffer));
+}
+
+main();
+```
