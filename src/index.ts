@@ -84,22 +84,22 @@ export default class Randomizer {
     #sanitizeFlags(flags: number): number {
         let clean = flags;
         // if include duals but no randomizing levels...
-        if ((clean & 0b000000000000000000000010) > 0 && (clean & 0b000000000000000000000001) === 0) {
+        if ((clean & 0b000000000000000000000011) === 0b000000000000000000000010) {
             // ...then randomize the levels
             clean = clean | 0b000000000000000000000001;
         }
         // if both randomly swapping duals and swapping all duals...
-        if ((clean & 0b000000000000000000110000) > 0) {
+        if ((clean & 0b000000000000000000110000) === 0b000000000000000000110000) {
             // ...then swap all dual exits
             clean = clean & 0b111111111111111111101111;
         }
         // if both randomly fast scrolling and all fast scrolling...
-        if ((clean & 0b000000000110000000000000) > 0) {
+        if ((clean & 0b000000000110000000000000) === 0b000000000110000000000000) {
             // ...then all fast scrolling
             clean = clean & 0b111111111101111111111111;
         }
         // if both randomly Luigi physics and all Luigi physics...
-        if ((clean & 0b000000110000000000000000) > 0) {
+        if ((clean & 0b000000110000000000000000) === 0b000000110000000000000000) {
             // ...then all Luigi physics
             clean = clean & 0b111111101111111111111111;
         }
@@ -113,7 +113,8 @@ export default class Randomizer {
     }
 
     #randomFloat(): number {
-        return this.#nextRNG() / Math.pow(2, 32);
+        const float = this.#nextRNG() / Math.pow(2, 32);
+        return float;
     }
 
     #randomInt(lim: number): number {
@@ -253,8 +254,8 @@ export default class Randomizer {
             {byte: 0x08, offsets: [0x49F61, 0x499A7]},
             {byte: 0x0F, offsets: [0x51D99, 0x51D29]}
         ].forEach(level => {
-            if (!all) {
-                if (this.#randomBool()) {
+            if (all === false) {
+                if (this.#randomBool() === true) {
                     [this.#rom[level.offsets[0]], this.#rom[level.offsets[1]]] = [this.#rom[level.offsets[1]], this.#rom[level.offsets[0]]];
                 }
             } else if (this.#rom[0x3C24A] === 0x11 || (level.byte !== 0x11 && this.#rom[0x3C24A] !== level.byte)) {
