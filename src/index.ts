@@ -585,7 +585,7 @@ export default class Randomizer {
     #credits(): void {
         const writeSentence = (offset, line) => {
             for (let i = 0; i < line.length; i++) {
-                this.#rom[offset + i] = text.ascii.find(letter => letter.char === line.charAt(i)).byte;
+                this.#rom[offset + i] = line.charCodeAt(i);
             }
         }
         // quotes
@@ -639,8 +639,8 @@ export default class Randomizer {
         if ((this.#flags & 0b000000000000000001000000) > 0) {
             const slotsBuffer = await readFile(path.resolve(__dirname, `patches/slots${this.#rom[0x148] === 0x05 ? '_dx' : ''}.ips`));
             this.#buffer = PatchROM(this.#buffer, slotsBuffer.buffer);
-            this.#randomizeGambling();
             this.#rom = new Uint8Array(this.#buffer);
+            this.#randomizeGambling();
         }
         if ((this.#flags & 0b000000000000000000000001) > 0) {
             this.#randomizeLevels();

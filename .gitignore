@@ -106,3 +106,5 @@ dist
 package-lock.json
 test.js
 sml2.gb
+sml2r*.gb
+sml2r*.gbc
