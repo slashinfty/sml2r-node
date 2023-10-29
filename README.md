@@ -140,3 +140,7 @@ const main = async () => {
 
 main();
 ```
+
+## Discussion
+
+You can discuss this repository more in my [Discord](https://discord.gg/Q8t9gcZ77s).
