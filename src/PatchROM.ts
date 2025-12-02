@@ -3,7 +3,7 @@
 // originally licensed under the MIT license by Marc Robledo
 // license available https://github.com/marcrobledo/RomPatcher.js/blob/master/LICENSE
 
-export const PatchROM = (sourceBuffer: ArrayBuffer, patchBuffer: ArrayBuffer): ArrayBuffer => {
+export const PatchROM = (sourceBuffer: ArrayBuffer, patchBuffer: ArrayBufferLike): ArrayBuffer => {
     const RECORD_RLE = 0x0000;
     const RECORD_SIMPLE = 1;
     const setRecords = patch => {

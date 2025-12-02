@@ -424,12 +424,10 @@ export default class Randomizer {
             if (this.#rom[i] == 0xFF) {
                 i -= 2;
             } else if (free.includes(sprite)) {
-                if (i >= 0xE0BD && i < 0xE123 && sprite !== 0x1F) {
-                    this.#spriteRandomize(free.slice(0, free.length - 1), i);
-                } else if (sprite === 0x1F) {
-                    this.#spriteRandomize(free, i);
+                if (i >= 0xE0BD && i < 0xE123) {
+                    if (sprite !== 0x1F) this.#spriteRandomize(free.slice(0, free.length - 1), i)
                 } else {
-                    this.#spriteRandomize(free.slice(0, free.length - 1), i);
+                    this.#spriteRandomize(sprite === 0x1F ? free : free.slice(0, free.length - 1), i);
                 }
             } else if (block.includes(sprite)) {
                 this.#spriteRandomize(block, i);
